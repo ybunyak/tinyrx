@@ -41,6 +41,17 @@ const float codeVersion = 2.9; // Software revision (see https://github.com/TheD
 #include "balancing.h"
 #include "helper.h"
 
+#define PIN_RF24_CE 8
+#define PIN_RF24_CSN 7
+
+#define PIN_MOTOR1_IN1 4
+#define PIN_MOTOR1_IN2 9
+#define PIN_MOTOR1_PWM 6
+
+#define PIN_MOTOR2_IN1 5
+#define PIN_MOTOR2_IN2 2
+#define PIN_MOTOR2_PWM 3
+
 //
 // =======================================================================================================
 // PIN ASSIGNMENTS & GLOBAL VARIABLES
@@ -61,8 +72,8 @@ const uint64_t pipeIn[] = {
 };
 const int maxVehicleNumber = (sizeof(pipeIn) / (sizeof(uint64_t)));
 
-// Hardware configuration: Set up nRF24L01 radio on hardware SPI bus & pins 8 (CE) & 7 (CSN)
-RF24 radio(8, 7);
+// Hardware configuration: Set up nRF24L01 radio on hardware SPI bus & pins CE & CSN
+RF24 radio(PIN_RF24_CE, PIN_RF24_CSN);
 
 // The size of this struct should not exceed 32 bytes
 struct RcData {
@@ -161,29 +172,11 @@ void setupRadio() {
 void setupMotors() {
 
   // TB6612FNG H-Bridge pins
-  // ---- IMPORTANT ---- The pin assignment depends on your board revision and is switched here to match!
-  const byte motor1_in1 = 4;
-  const byte motor1_in2 = 9;
-  const byte motor1_pwm = 6;
-
-  byte motor2_in1;
-  const byte motor2_in2 = 2;
-  byte motor2_pwm;
-
-  // Switchable pins:
-  if (boardVersion >= 1.3) { // Board version >= 1.3:
-    motor2_in1 = 5;  // 5
-    motor2_pwm = 3;  // 3
-  }
-  else { // Board Version < 1.3:
-    motor2_in1 = 3;  // 3
-    motor2_pwm = 5;  // 5
-  }
 
   // SYNTAX: IN1, IN2, PWM, min. input value, max. input value, neutral position width
   // invert rotation direction true or false
-  Motor1.begin(motor1_in1, motor1_in2, motor1_pwm, 0, 100, 4, false); // Drive motor
-  Motor2.begin(motor2_in1, motor2_in2, motor2_pwm, 0, 100, 4, false); // Steering motor (Drive in "HP" version)
+  Motor1.begin(PIN_MOTOR1_IN1, PIN_MOTOR1_IN2, PIN_MOTOR1_PWM, 0, 100, 4, false); // Drive motor
+  Motor2.begin(PIN_MOTOR2_IN1, PIN_MOTOR2_IN2, PIN_MOTOR2_PWM, 0, 100, 4, false); // Steering motor (Drive in "HP" version)
 
   // Motor PWM frequency prescalers (Requires the PWMFrequency.h library)
   // Differential steering vehicles: locked to 984Hz, to make sure, that both motors use 984Hz.
@@ -191,8 +184,8 @@ void setupMotors() {
 
   // ----------- IMPORTANT!! --------------
   // Motor 1 always runs @ 984Hz PWM frequency and can't be changed, because timers 0 an 1 are in use for other things!
-  // Motor 2 (pin 3) can be changed to the following PWM frequencies: 32 = 984Hz, 8 = 3936Hz, 1 = 31488Hz
-  setPWMPrescaler(3, pwmPrescaler2); // pin 3 is hardcoded, because we can't change all others anyway
+  // Motor 2 can be changed to the following PWM frequencies: 32 = 984Hz, 8 = 3936Hz, 1 = 31488Hz
+  setPWMPrescaler(PIN_MOTOR2_PWM, pwmPrescaler2);
 }
 
 //
@@ -782,12 +775,7 @@ void digitalOutputs() {
 // =======================================================================================================
 //
 
-boolean battSense;
-
 void checkBattery() {
-
-  if (boardVersion < 1.2) battSense = false;
-  else battSense = true;
 
   // switch between load and no load contition
   if (millis() - millisLightOff >= 1000) { // one s after the vehicle did stop
@@ -806,12 +794,8 @@ void checkBattery() {
     payload.batteryVoltage = batteryAverage();
     payload.vcc = vccAverage();
 
-    if (battSense) { // Observe battery voltage
-      if (payload.batteryVoltage <= cutoffVoltage) payload.batteryOk = false;
-    }
-    else { // Observe vcc voltage
-      if (payload.vcc <= cutoffVoltage) payload.batteryOk = false;
-    }
+    // Observe battery voltage
+    if (payload.batteryVoltage <= cutoffVoltage) payload.batteryOk = false;
   }
 }
 
@@ -839,8 +823,6 @@ float vccAverage() {
 // battery ----
 float batteryAverage() {
   static int raw[6];
-
-  if (!battSense) return 0;
 
   if (raw[0] == 0) {
     for (int i = 0; i <= 5; i++) {
