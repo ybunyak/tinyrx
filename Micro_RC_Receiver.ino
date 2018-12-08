@@ -41,6 +41,8 @@ const float codeVersion = 2.9; // Software revision (see https://github.com/TheD
 #include "balancing.h"
 #include "helper.h"
 
+#if 0
+// micro rc receiver
 #define PIN_RF24_CE 8
 #define PIN_RF24_CSN 7
 
@@ -51,6 +53,19 @@ const float codeVersion = 2.9; // Software revision (see https://github.com/TheD
 #define PIN_MOTOR2_IN1 5
 #define PIN_MOTOR2_IN2 2
 #define PIN_MOTOR2_PWM 3
+#else
+// tinyrx
+#define PIN_RF24_CE 3
+#define PIN_RF24_CSN 4
+
+#define PIN_MOTOR1_IN1 7 // not used
+#define PIN_MOTOR1_IN2 6 // not used
+#define PIN_MOTOR1_PWM 5 // not used
+
+#define PIN_MOTOR2_IN1 8
+#define PIN_MOTOR2_IN2 9
+#define PIN_MOTOR2_PWM 10
+#endif
 
 //
 // =======================================================================================================
