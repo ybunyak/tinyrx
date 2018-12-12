@@ -3,7 +3,12 @@
 
 #include "Arduino.h"
 
-#define CONFIG_WPL_B-36 // <- Select the correct vehicle configuration here before uploading!
+// Select the correct vehicle configuration here before uploading!
+// #define CONFIG_RIPMAX_SUBARU_IMPREZA
+// #define CONFIG_RIPMAX_NISSAN_SKYLINE
+// #define CONFIG_INDOOR_RACER_IMPREZA
+// #define CONFIG_INDOOR_RACER_LANCER
+#define CONFIG_187_LAND_ROVER
 
 //
 // =======================================================================================================
@@ -78,6 +83,297 @@
   // Tone sound (see: https://www.youtube.com/watch?v=fe5_1mMtcLQ&t=3s)
   boolean toneOut; // true = a BC337 amplifier for tone() is connected instead of servo 3
 */
+
+// Ripmax: Subaru Impreza ---------------------------------------------------------------
+#ifdef CONFIG_RIPMAX_SUBARU_IMPREZA
+// Battery type
+boolean liPo = false;
+float cutoffVoltage = 4.4;
+
+// Board type
+float boardVersion = 1.4;
+boolean HP = false;
+
+// Vehicle address
+int vehicleNumber = 1;
+
+// Vehicle type
+byte vehicleType = 0;
+
+// Lights
+boolean escBrakeLights = true;
+boolean tailLights = true;
+boolean headLights = true;
+boolean indicators = true;
+boolean beacons = false;
+
+// Servo limits
+byte lim1L = 65, lim1R = 135;
+byte lim2L = 45, lim2R = 135;
+byte lim3L = 45, lim3R = 135;
+byte lim3Llow = 85, lim3Rlow = 115; // limited top speed angles!
+byte lim4L = 45, lim4R = 135;
+
+// Motor configuration
+int maxPWMfull = 255;
+int maxPWMlimited = 170;
+int minPWM = 0;
+byte maxAccelerationFull = 3;
+byte maxAccelerationLimited = 12;
+
+// Variables for self balancing (vehicleType = 4) only!
+float tiltCalibration = 0.0;
+
+// Steering configuration
+byte steeringTorque = 255;
+
+// Motor 2 PWM frequency
+byte pwmPrescaler2 = 1; // We don't want PWM switching noise from the steering! So, 31.5KHz frequency.
+
+// Additional Channels
+boolean TXO_momentary1 = true;
+boolean TXO_toggle1 = false;
+boolean potentiometer1 = false;
+
+// Engine sound
+boolean engineSound = false;
+
+// Tone sound
+boolean toneOut = false;
+#endif
+
+// Ripmax: Nissan Skyline ---------------------------------------------------------------
+#ifdef CONFIG_RIPMAX_NISSAN_SKYLINE
+// Battery type
+boolean liPo = false;
+float cutoffVoltage = 4.4;
+
+// Board type
+float boardVersion = 1.4;
+boolean HP = false;
+
+// Vehicle address
+int vehicleNumber = 2;
+
+// Vehicle type
+byte vehicleType = 0;
+
+// Lights
+boolean escBrakeLights = true;
+boolean tailLights = true;
+boolean headLights = true;
+boolean indicators = true;
+boolean beacons = false;
+
+// Servo limits
+byte lim1L = 65, lim1R = 135;
+byte lim2L = 45, lim2R = 135;
+byte lim3L = 45, lim3R = 135;
+byte lim3Llow = 85, lim3Rlow = 115; // limited top speed angles!
+byte lim4L = 45, lim4R = 135;
+
+// Motor configuration
+int maxPWMfull = 255;
+int maxPWMlimited = 170;
+int minPWM = 0;
+byte maxAccelerationFull = 3;
+byte maxAccelerationLimited = 12;
+
+// Variables for self balancing (vehicleType = 4) only!
+float tiltCalibration = 0.0;
+
+// Steering configuration
+byte steeringTorque = 255;
+
+// Motor 2 PWM frequency
+byte pwmPrescaler2 = 1; // We don't want PWM switching noise from the steering! So, 31.5KHz frequency.
+
+// Additional Channels
+boolean TXO_momentary1 = true;
+boolean TXO_toggle1 = false;
+boolean potentiometer1 = false;
+
+// Engine sound
+boolean engineSound = false;
+
+// Tone sound
+boolean toneOut = false;
+#endif
+
+// Epoch Indoor Racer: Subaru Impreza ---------------------------------------------------------------
+#ifdef CONFIG_INDOOR_RACER_IMPREZA
+// Battery type
+boolean liPo = false;
+float cutoffVoltage = 4.4;
+
+// Board type
+float boardVersion = 1.4;
+boolean HP = false;
+
+// Vehicle address
+int vehicleNumber = 3;
+
+// Vehicle type
+byte vehicleType = 0;
+
+// Lights
+boolean escBrakeLights = false;
+boolean tailLights = false;
+boolean headLights = false;
+boolean indicators = false;
+boolean beacons = false;
+
+// Servo limits
+byte lim1L = 45, lim1R = 135;
+byte lim2L = 45, lim2R = 135;
+byte lim3L = 45, lim3R = 135;
+byte lim3Llow = 75, lim3Rlow = 105; // limited top speed angles!
+byte lim4L = 45, lim4R = 135;
+
+// Motor configuration
+int maxPWMfull = 255;
+int maxPWMlimited = 170;
+int minPWM = 0;
+byte maxAccelerationFull = 3;
+byte maxAccelerationLimited = 12;
+
+// Variables for self balancing (vehicleType = 4) only!
+float tiltCalibration = 0.0;
+
+// Steering configuration
+byte steeringTorque = 255;
+
+// Motor 2 PWM frequency
+byte pwmPrescaler2 = 1; // We don't want PWM switching noise from the steering! So, 31.5KHz frequency.
+
+// Additional Channels
+boolean TXO_momentary1 = true;
+boolean TXO_toggle1 = false;
+boolean potentiometer1 = false;
+
+// Engine sound
+boolean engineSound = false;
+
+// Tone sound
+boolean toneOut = false;
+#endif
+
+// Epoch Indoor Racer: Mitsubishi Lancer ------------------------------------------------------------
+#ifdef CONFIG_INDOOR_RACER_LANCER
+// Battery type
+boolean liPo = false;
+float cutoffVoltage = 4.4;
+
+// Board type
+float boardVersion = 1.4;
+boolean HP = false;
+
+// Vehicle address
+int vehicleNumber = 4;
+
+// Vehicle type
+byte vehicleType = 0;
+
+// Lights
+boolean escBrakeLights = false;
+boolean tailLights = false;
+boolean headLights = false;
+boolean indicators = false;
+boolean beacons = false;
+
+// Servo limits
+byte lim1L = 45, lim1R = 135;
+byte lim2L = 45, lim2R = 135;
+byte lim3L = 45, lim3R = 135;
+byte lim3Llow = 75, lim3Rlow = 105; // limited top speed angles!
+byte lim4L = 45, lim4R = 135;
+
+// Motor configuration
+int maxPWMfull = 255;
+int maxPWMlimited = 170;
+int minPWM = 0;
+byte maxAccelerationFull = 3;
+byte maxAccelerationLimited = 12;
+
+// Variables for self balancing (vehicleType = 4) only!
+float tiltCalibration = 0.0;
+
+// Steering configuration
+byte steeringTorque = 255;
+
+// Motor 2 PWM frequency
+byte pwmPrescaler2 = 1; // We don't want PWM switching noise from the steering! So, 31.5KHz frequency.
+
+// Additional Channels
+boolean TXO_momentary1 = true;
+boolean TXO_toggle1 = false;
+boolean potentiometer1 = false;
+
+// Engine sound
+boolean engineSound = false;
+
+// Tone sound
+boolean toneOut = false;
+#endif
+
+// Herpa 1:87 H0 Land Rover ------------------------------------------------------------
+#ifdef CONFIG_187_LAND_ROVER
+#define PCB_187
+// Battery type
+boolean liPo = true;
+float cutoffVoltage = 3.6;
+
+// Board type
+float boardVersion = 1.4;
+boolean HP = false;
+
+// Vehicle address
+int vehicleNumber = 1;
+
+// Vehicle type
+byte vehicleType = 0;
+
+// Lights
+boolean escBrakeLights = true;
+boolean tailLights = true;
+boolean headLights = true;
+boolean indicators = true;
+boolean beacons = false;
+
+// Servo limits
+byte lim1L = 45, lim1R = 135;
+byte lim2L = 45, lim2R = 135;
+byte lim3L = 45, lim3R = 135;
+byte lim3Llow = 75, lim3Rlow = 105; // limited top speed angles!
+byte lim4L = 45, lim4R = 135;
+
+// Motor configuration
+int maxPWMfull = 255;
+int maxPWMlimited = 170;
+int minPWM = 0;
+byte maxAccelerationFull = 3;
+byte maxAccelerationLimited = 12;
+
+// Variables for self balancing (vehicleType = 4) only!
+float tiltCalibration = 0.0;
+
+// Steering configuration
+byte steeringTorque = 255;
+
+// Motor 2 PWM frequency
+byte pwmPrescaler2 = 1; // We don't want PWM switching noise from the steering! So, 31.5KHz frequency.
+
+// Additional Channels
+boolean TXO_momentary1 = true;
+boolean TXO_toggle1 = false;
+boolean potentiometer1 = false;
+
+// Engine sound
+boolean engineSound = false;
+
+// Tone sound
+boolean toneOut = false;
+#endif
 
 // Generic configuration, board v1.0-------------------------------------------------------------------------
 #ifdef CONFIG_GENERIC_V10
@@ -1464,7 +1760,7 @@ boolean toneOut = false;
 #endif
 
 // 1:16 WPL B-36 Russian URAL-4320 Military Command Truck-------------------------------------------------
-#ifdef CONFIG_WPL_B-36
+#ifdef CONFIG_WPL_B36
 // Battery type
 boolean liPo = false;
 float cutoffVoltage = 4.5; // 5V receiver supply voltage surveillance from BEC only!
