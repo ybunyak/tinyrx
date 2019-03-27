@@ -116,10 +116,10 @@ byte lim4L = 45, lim4R = 135;
 
 // Motor configuration
 int maxPWMfull = 255;
-int maxPWMlimited = 170;
+int maxPWMlimited = 63;
 int minPWM = 0;
-byte maxAccelerationFull = 3;
-byte maxAccelerationLimited = 12;
+byte maxAccelerationFull = 1;
+byte maxAccelerationLimited = 4;
 
 // Variables for self balancing (vehicleType = 4) only!
 float tiltCalibration = 0.0;
@@ -166,7 +166,7 @@ boolean indicators = true;
 boolean beacons = false;
 
 // Servo limits
-byte lim1L = 65, lim1R = 135;
+byte lim1L = 135, lim1R = 65;
 byte lim2L = 45, lim2R = 135;
 byte lim3L = 45, lim3R = 135;
 byte lim3Llow = 85, lim3Rlow = 115; // limited top speed angles!
@@ -174,10 +174,10 @@ byte lim4L = 45, lim4R = 135;
 
 // Motor configuration
 int maxPWMfull = 255;
-int maxPWMlimited = 170;
+int maxPWMlimited = 63;
 int minPWM = 0;
-byte maxAccelerationFull = 3;
-byte maxAccelerationLimited = 12;
+byte maxAccelerationFull = 1;
+byte maxAccelerationLimited = 4;
 
 // Variables for self balancing (vehicleType = 4) only!
 float tiltCalibration = 0.0;
@@ -234,8 +234,8 @@ byte lim4L = 45, lim4R = 135;
 int maxPWMfull = 255;
 int maxPWMlimited = 170;
 int minPWM = 0;
-byte maxAccelerationFull = 3;
-byte maxAccelerationLimited = 12;
+byte maxAccelerationFull = 1;
+byte maxAccelerationLimited = 4;
 
 // Variables for self balancing (vehicleType = 4) only!
 float tiltCalibration = 0.0;
@@ -292,8 +292,8 @@ byte lim4L = 45, lim4R = 135;
 int maxPWMfull = 255;
 int maxPWMlimited = 170;
 int minPWM = 0;
-byte maxAccelerationFull = 3;
-byte maxAccelerationLimited = 12;
+byte maxAccelerationFull = 1;
+byte maxAccelerationLimited = 4;
 
 // Variables for self balancing (vehicleType = 4) only!
 float tiltCalibration = 0.0;
