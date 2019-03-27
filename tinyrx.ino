@@ -41,30 +41,44 @@ const float codeVersion = 2.9; // Software revision (see https://github.com/TheD
 #include "balancing.h"
 #include "helper.h"
 
-#ifdef PCB_187
-// tinyrx
-#define PIN_RF24_CE 3
-#define PIN_RF24_CSN 4
+// tinyrx v1.0 (1m0r) - PCB with ESC and no radio.
+#if defined(PCB_187_v1x0)
+    #define PIN_RF24_CE 3
+    #define PIN_RF24_CSN 4
 
-#define PIN_MOTOR1_IN1 7 // not used
-#define PIN_MOTOR1_IN2 6 // not used
-#define PIN_MOTOR1_PWM 5 // not used
+    #define PIN_MOTOR1_IN1 8
+    #define PIN_MOTOR1_IN2 9
+    #define PIN_MOTOR1_PWM 10
 
-#define PIN_MOTOR2_IN1 8
-#define PIN_MOTOR2_IN2 9
-#define PIN_MOTOR2_PWM 10
+    #define PIN_MOTOR2_IN1 7 // not used
+    #define PIN_MOTOR2_IN2 6 // not used
+    #define PIN_MOTOR2_PWM 5 // not used
+
+// tinyrx v2.0 (0m1r) - PCB no ESC and with radio.
+#elif defined(PCB_187_v2x0)
+    #define PIN_RF24_CE 3
+    #define PIN_RF24_CSN 4
+
+    #define PIN_MOTOR1_IN1 10
+    #define PIN_MOTOR1_IN2 9
+    #define PIN_MOTOR1_PWM 5
+
+    #define PIN_MOTOR2_IN1 6 // not used
+    #define PIN_MOTOR2_IN2 7 // not used
+    #define PIN_MOTOR2_PWM 8 // not used
+
+// Original Micro RC Receiver.
 #else
-// micro rc receiver
-#define PIN_RF24_CE 8
-#define PIN_RF24_CSN 7
+    #define PIN_RF24_CE 8
+    #define PIN_RF24_CSN 7
 
-#define PIN_MOTOR1_IN1 4
-#define PIN_MOTOR1_IN2 9
-#define PIN_MOTOR1_PWM 6
+    #define PIN_MOTOR1_IN1 4
+    #define PIN_MOTOR1_IN2 9
+    #define PIN_MOTOR1_PWM 6
 
-#define PIN_MOTOR2_IN1 5
-#define PIN_MOTOR2_IN2 2
-#define PIN_MOTOR2_PWM 3
+    #define PIN_MOTOR2_IN1 5
+    #define PIN_MOTOR2_IN2 2
+    #define PIN_MOTOR2_PWM 3
 #endif
 
 //
@@ -155,7 +169,8 @@ boolean engineOn = false;
 // =======================================================================================================
 //
 
-void setupRadio() {
+void setupRadio()
+{
   radio.begin();
   radio.setChannel(NRFchannel[chPointer]);
 
@@ -184,8 +199,8 @@ void setupRadio() {
 // =======================================================================================================
 //
 
-void setupMotors() {
-
+void setupMotors()
+{
   // TB6612FNG H-Bridge pins
 
   // SYNTAX: IN1, IN2, PWM, min. input value, max. input value, neutral position width
@@ -209,8 +224,8 @@ void setupMotors() {
 // =======================================================================================================
 //
 
-void setup() {
-
+void setup()
+{
 #ifdef DEBUG
   Serial.begin(115200);
   printf_begin();
@@ -303,8 +318,8 @@ boolean escBrakeActive() {
   return brake;
 }
 
-void led() {
-
+void led()
+{
   // Lights are switching off 10s after the vehicle did stop
   if (millis() - millisLightOff >= 10000) {
     headLight.off(); // Headlight off
@@ -388,8 +403,8 @@ void led() {
 // =======================================================================================================
 //
 
-void readRadio() {
-
+void readRadio()
+{
   static unsigned long lastRecvTime = 0;
   byte pipeNo;
 
@@ -442,7 +457,8 @@ void readRadio() {
 // =======================================================================================================
 //
 
-void writeServos() {
+void writeServos()
+{
   // Aileron or Steering
   if (vehicleType != 5) { // If not car with MSRC stabilty control
     servo1.write(map(data.axis1, 100, 0, lim1L, lim1R) ); // 45 - 135°
@@ -492,8 +508,8 @@ void writeServos() {
 // =======================================================================================================
 //
 
-void driveMotorsCar() {
-
+void driveMotorsCar()
+{
   int maxPWM;
   byte maxAcceleration;
 
@@ -538,8 +554,8 @@ void driveMotorsCar() {
 // =======================================================================================================
 //
 
-void driveMotorsForklift() {
-
+void driveMotorsForklift()
+{
   int maxPWM;
   byte maxAcceleration;
 
@@ -576,8 +592,8 @@ void driveMotorsForklift() {
 // =======================================================================================================
 //
 
-void driveMotorsSteering() {
-
+void driveMotorsSteering()
+{
   int pwm[2];
 
   // The steering overlay
@@ -655,8 +671,8 @@ void driveMotorsSteering() {
 // =======================================================================================================
 //
 
-void driveMotorsBalancing() {
-
+void driveMotorsBalancing()
+{
   // The steering overlay is in degrees per second, controlled by the MPU 6050 yaw rate and yoystick axis 1
   int steering = ((data.axis1 - 50) / 7) - yaw_rate; // -50 to 50 / 8 = 7°/s - yaw_rate
   steering = constrain(steering, -7, 7);
@@ -686,8 +702,8 @@ void driveMotorsBalancing() {
 // =======================================================================================================
 //
 
-void balancing() {
-
+void balancing()
+{
   // Read sensor data
   readMpu6050Data();
 
@@ -738,8 +754,8 @@ void balancing() {
 // =======================================================================================================
 // For cars with stability control (steering overlay depending on gyro yaw rate)
 
-void mrsc() {
-
+void mrsc()
+{
   // Read sensor data
   readMpu6050Data();
 
@@ -774,7 +790,8 @@ void mrsc() {
 // =======================================================================================================
 //
 
-void digitalOutputs() {
+void digitalOutputs()
+{
   if (TXO_momentary1) { // only, if function is enabled in vehicle configuration
     if (data.momentary1) {
       digitalWrite(DIGITAL_OUT_1, HIGH);
@@ -790,8 +807,8 @@ void digitalOutputs() {
 // =======================================================================================================
 //
 
-void checkBattery() {
-
+void checkBattery()
+{
   // switch between load and no load contition
   if (millis() - millisLightOff >= 1000) { // one s after the vehicle did stop
     isDriving = false; // no load
@@ -862,8 +879,8 @@ float batteryAverage() {
 // =======================================================================================================
 //
 
-void loop() {
-
+void loop()
+{
   // Read radio data from transmitter
   readRadio();
 
@@ -886,4 +903,3 @@ void loop() {
   // LED
   led();
 }
-

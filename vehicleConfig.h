@@ -318,7 +318,7 @@ boolean toneOut = false;
 
 // Herpa 1:87 H0 Land Rover ------------------------------------------------------------
 #ifdef CONFIG_187_LAND_ROVER
-#define PCB_187
+#define PCB_187_v1x0
 // Battery type
 boolean liPo = true;
 float cutoffVoltage = 3.6;
