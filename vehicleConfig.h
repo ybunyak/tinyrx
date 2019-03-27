@@ -328,7 +328,7 @@ float boardVersion = 1.4;
 boolean HP = false;
 
 // Vehicle address
-int vehicleNumber = 1;
+int vehicleNumber = 10;
 
 // Vehicle type
 byte vehicleType = 0;
@@ -341,7 +341,7 @@ boolean indicators = true;
 boolean beacons = false;
 
 // Servo limits
-byte lim1L = 45, lim1R = 135;
+byte lim1L = 52, lim1R = 112; // 82 - center
 byte lim2L = 45, lim2R = 135;
 byte lim3L = 45, lim3R = 135;
 byte lim3Llow = 75, lim3Rlow = 105; // limited top speed angles!
