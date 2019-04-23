@@ -318,14 +318,16 @@ boolean toneOut = false;
 
 // Herpa 1:87 H0 Land Rover ------------------------------------------------------------
 #ifdef CONFIG_187_LAND_ROVER
-#define PCB_187_v1x0
+
+#define PCB_187_v2x0
+
 // Battery type
-boolean liPo = true;
-float cutoffVoltage = 3.6;
+bool liPo = true;
+float cutoffVoltage = 3.2;
 
 // Board type
 float boardVersion = 1.4;
-boolean HP = false;
+bool HP = false;
 
 // Vehicle address
 int vehicleNumber = 10;
@@ -334,14 +336,14 @@ int vehicleNumber = 10;
 byte vehicleType = 0;
 
 // Lights
-boolean escBrakeLights = true;
-boolean tailLights = true;
-boolean headLights = true;
-boolean indicators = true;
-boolean beacons = false;
+bool escBrakeLights = true;
+bool tailLights = true;
+bool headLights = true;
+bool indicators = true;
+bool beacons = false;
 
 // Servo limits
-byte lim1L = 52, lim1R = 112; // 82 - center
+byte lim1L = 115, lim1R = 55; // 85 - center
 byte lim2L = 45, lim2R = 135;
 byte lim3L = 45, lim3R = 135;
 byte lim3Llow = 75, lim3Rlow = 105; // limited top speed angles!
@@ -349,10 +351,10 @@ byte lim4L = 45, lim4R = 135;
 
 // Motor configuration
 int maxPWMfull = 255;
-int maxPWMlimited = 170;
+int maxPWMlimited = 127;
 int minPWM = 0;
-byte maxAccelerationFull = 3;
-byte maxAccelerationLimited = 12;
+byte maxAccelerationFull = 1;
+byte maxAccelerationLimited = 4;
 
 // Variables for self balancing (vehicleType = 4) only!
 float tiltCalibration = 0.0;
@@ -364,15 +366,15 @@ byte steeringTorque = 255;
 byte pwmPrescaler2 = 1; // We don't want PWM switching noise from the steering! So, 31.5KHz frequency.
 
 // Additional Channels
-boolean TXO_momentary1 = true;
-boolean TXO_toggle1 = false;
-boolean potentiometer1 = false;
+bool TXO_momentary1 = false;
+bool TXO_toggle1 = false;
+bool potentiometer1 = false;
 
 // Engine sound
-boolean engineSound = false;
+bool engineSound = false;
 
 // Tone sound
-boolean toneOut = false;
+bool toneOut = false;
 #endif
 
 // Generic configuration, board v1.0-------------------------------------------------------------------------
